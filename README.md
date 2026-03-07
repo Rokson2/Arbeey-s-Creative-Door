@@ -1,36 +1,139 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Arbeey's Creative Door
 
-## Getting Started
+A desktop application for generating AI images and videos using fal.ai's powerful models.
 
-First, run the development server:
+## Features
+
+- **Multiple Generation Modes**
+  - Text → Image: Generate images from text descriptions
+  - Image → Image: Transform existing images with AI
+  - Text → Video: Create videos from text prompts
+  - Image → Video: Animate static images
+
+- **Supported Models**
+  - **Text-to-Image**: Nano Banana 2, SeeDream V4.5
+  - **Image-to-Image**: Nano Banana Pro Edit, SeeDream V4.5/V5-Lite
+  - **Text-to-Video**: Veo 3.1, Veo 3.1 Fast
+  - **Image-to-Video**: Veo 3.1, Veo 3.1 Fast, Kling V2.5/V2.6-Pro/V3-Pro
+
+- **Parallel Queue System**: Submit multiple generation requests that process concurrently
+- **Session Spending Tracking**: Monitor costs with configurable limits
+- **Reference Image Support**: Upload images or paste URLs
+- **Gallery**: View, download, and reuse generated content
+- **Desktop App**: Packaged as a native macOS application
+
+## Tech Stack
+
+- **Frontend**: Next.js 16, React 19, TypeScript, Tailwind CSS
+- **Desktop**: Tauri 2.x (Rust backend)
+- **AI**: fal.ai API
+
+## Development Setup
+
+### Prerequisites
+
+- Node.js 20+
+- Rust (for Tauri)
+- macOS (for desktop build)
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/fal-creatives.git
+cd fal-creatives
+
+# Install dependencies
+npm install
+
+# Create environment file
+cp .env.example .env.local
+# Add your fal.ai API key to .env.local
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Getting a fal.ai API Key
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Visit https://fal.ai/dashboard/keys
+2. Create a new API key
+3. Add it to `.env.local`:
+   ```
+   FAL_KEY=your_api_key_here
+   ```
+   
+Or enter it directly in the app's Settings panel.
 
-## Learn More
+## Building the Desktop App
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Build Next.js standalone server and download Node.js runtime
+./scripts/build-server.sh
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Build Tauri desktop app
+npx tauri build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The built app will be in `src-tauri/target/release/bundle/`.
 
-## Deploy on Vercel
+### Manual DMG Creation (macOS)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+If Tauri's automated DMG creation fails:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+cd src-tauri/target/release/bundle
+mkdir -p dmg_temp
+cp -r macos/Arbeey\'s\ Creative\ Door.app dmg_temp/
+hdiutil create -volname "Arbeey's Creative Door" -srcfolder dmg_temp -ov -format UDZO "dmg/Arbeey's Creative Door.dmg"
+```
+
+## Project Structure
+
+```
+fal-creatives/
+├── src/
+│   ├── app/
+│   │   ├── api/generate/route.ts   # API endpoint
+│   │   └── page.tsx                # Main UI
+│   ├── components/
+│   │   └── queue/                  # Queue system components
+│   └── lib/
+│       ├── models.ts               # Model configurations
+│       └── types.ts                # TypeScript types
+├── src-tauri/
+│   ├── src/lib.rs                  # Tauri backend
+│   ├── tauri.conf.json             # Tauri config
+│   └── server/                     # Bundled Next.js (built)
+├── scripts/
+│   └── build-server.sh             # Build script
+└── package.json
+```
+
+## Usage
+
+1. Enter your fal.ai API key in Settings
+2. Select a category (Text→Image, Image→Image, etc.)
+3. Choose a model
+4. Enter your prompt
+5. (For image-based modes) Upload or paste a reference image
+6. Click Generate
+7. Submit multiple requests - they process in parallel!
+8. Download results from the gallery
+
+## Cost Tracking
+
+- Each model has a per-generation cost displayed
+- Session spending is tracked with warnings at 80%
+- Generation is blocked when spending limit is reached
+- Reset session to continue
+
+## License
+
+MIT
+
+---
+
+Built with ❤️ using fal.ai

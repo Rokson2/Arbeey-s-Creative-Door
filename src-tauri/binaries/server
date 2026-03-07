@@ -1,0 +1,7 @@
+#!/bin/bash
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SERVER_DIR="$SCRIPT_DIR/../server"
+NODE_BIN="$SERVER_DIR/node/bin/node"
+
+cd "$SERVER_DIR"
+exec "$NODE_BIN" server.js
