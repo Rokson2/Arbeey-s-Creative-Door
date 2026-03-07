@@ -1,6 +1,6 @@
 # Arbeey's Creative Door
 
-A desktop application for generating AI images and videos using fal.ai's powerful models.
+A web application for generating AI images and videos using fal.ai's powerful models.
 
 ## Features
 
@@ -20,28 +20,36 @@ A desktop application for generating AI images and videos using fal.ai's powerfu
 - **Session Spending Tracking**: Monitor costs with configurable limits
 - **Reference Image Support**: Upload images or paste URLs
 - **Gallery**: View, download, and reuse generated content
-- **Desktop App**: Packaged as a native macOS application
 
 ## Tech Stack
 
 - **Frontend**: Next.js 16, React 19, TypeScript, Tailwind CSS
-- **Desktop**: Tauri 2.x (Rust backend)
 - **AI**: fal.ai API
 
-## Development Setup
+## Quick Start
 
 ### Prerequisites
 
-- Node.js 20+
-- Rust (for Tauri)
-- macOS (for desktop build)
+- Node.js 20+ ([Download here](https://nodejs.org/))
 
-### Installation
+### Option 1: Double-Click Launcher (Easiest)
+
+**macOS:**
+1. Download this repository
+2. Double-click `start-mac.sh`
+3. The app will open in your browser automatically
+
+**Windows:**
+1. Download this repository
+2. Double-click `start-windows.bat`
+3. The app will open in your browser automatically
+
+### Option 2: Manual Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/fal-creatives.git
-cd fal-creatives
+git clone https://github.com/Rokson2/Arbeey-s-Creative-Door.git
+cd Arbeey-s-Creative-Door
 
 # Install dependencies
 npm install
@@ -67,33 +75,22 @@ Open http://localhost:3000 in your browser.
    
 Or enter it directly in the app's Settings panel.
 
-## Building the Desktop App
+## Creating a Desktop Shortcut
 
-```bash
-# Build Next.js standalone server and download Node.js runtime
-./scripts/build-server.sh
+**macOS:**
+1. Right-click `start-mac.sh` → Make Alias
+2. Rename the alias to "Arbeey's Creative Door"
+3. Drag the alias to your Desktop
 
-# Build Tauri desktop app
-npx tauri build
-```
-
-The built app will be in `src-tauri/target/release/bundle/`.
-
-### Manual DMG Creation (macOS)
-
-If Tauri's automated DMG creation fails:
-
-```bash
-cd src-tauri/target/release/bundle
-mkdir -p dmg_temp
-cp -r macos/Arbeey\'s\ Creative\ Door.app dmg_temp/
-hdiutil create -volname "Arbeey's Creative Door" -srcfolder dmg_temp -ov -format UDZO "dmg/Arbeey's Creative Door.dmg"
-```
+**Windows:**
+1. Right-click `start-windows.bat` → Create shortcut
+2. Rename it to "Arbeey's Creative Door"
+3. Drag the shortcut to your Desktop
 
 ## Project Structure
 
 ```
-fal-creatives/
+Arbeey-s-Creative-Door/
 ├── src/
 │   ├── app/
 │   │   ├── api/generate/route.ts   # API endpoint
@@ -103,12 +100,8 @@ fal-creatives/
 │   └── lib/
 │       ├── models.ts               # Model configurations
 │       └── types.ts                # TypeScript types
-├── src-tauri/
-│   ├── src/lib.rs                  # Tauri backend
-│   ├── tauri.conf.json             # Tauri config
-│   └── server/                     # Bundled Next.js (built)
-├── scripts/
-│   └── build-server.sh             # Build script
+├── start-mac.sh                    # Mac launcher
+├── start-windows.bat               # Windows launcher
 └── package.json
 ```
 
