@@ -135,8 +135,16 @@ function buildInput(body: RequestBody, model: (typeof MODELS)[string]): Record<s
   }
 
   if (category === "image-to-video" && referenceImages && referenceImages.length > 0) {
-    // Image-to-video models only support single image
-    if (modelId.includes("kling-video/v2.6") || modelId.includes("kling-video/v3")) {
+    if (modelId === "fal-ai/kling-video/v3/pro/image-to-video") {
+      if (referenceImages.length === 1) {
+        input.start_image_url = referenceImages[0];
+      } else {
+        input.elements = [{
+          frontal_image_url: referenceImages[0],
+          reference_image_urls: referenceImages.slice(1)
+        }];
+      }
+    } else if (modelId.includes("kling-video/v2.6") || modelId.includes("kling-video/v3")) {
       input.start_image_url = referenceImages[0];
     } else {
       input.image_url = referenceImages[0];
