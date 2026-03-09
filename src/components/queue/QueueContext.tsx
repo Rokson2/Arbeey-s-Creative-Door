@@ -11,7 +11,7 @@ interface QueueContextType {
     modelId: string,
     category: Category,
     prompt: string,
-    referenceImages: string[] | undefined, // Changed to array
+    referenceImages: string[] | undefined,
     settings: ModelSettings,
     apiKey: string
   ) => string;
@@ -30,19 +30,19 @@ const ESTIMATED_DURATIONS: Record<string, number> = {
   // Image-to-Image
   "fal-ai/nano-banana-pro/edit": 20,
   "fal-ai/nano-banana-2/edit": 20,
-  "fal-ai/bytedance/seedream/v4.5/image-to-image": 12,
-  "fal-ai/bytedance/seedream/v5-lite/image-to-image": 10,
+  "fal-ai/bytedance/seedream/v4.5/edit": 12,
+  "fal-ai/bytedance/seedream/v5-lite/edit": 10,
   
   // Text-to-Video
-  "fal-ai/veo-3.1-generate-001": 120,
-  "fal-ai/veo-3.1-fast-generate-001": 60,
+  "fal-ai/veo3.1": 120,
+  "fal-ai/veo3.1/fast": 60,
   
   // Image-to-Video
-  "fal-ai/veo-3.1-generate-001/image-to-video": 120,
-  "fal-ai/veo-3.1-fast-generate-001/image-to-video": 60,
-  "fal-ai/kling-video/v2.5/image-to-video": 90,
-  "fal-ai/kling-video/v2.6-pro/image-to-video": 100,
-  "fal-ai/kling-video/v3-pro/image-to-video": 110,
+  "fal-ai/veo3.1/image-to-video": 120,
+  "fal-ai/veo3.1/fast/image-to-video": 60,
+  "fal-ai/kling-video/v2.5-turbo/pro/image-to-video": 90,
+  "fal-ai/kling-video/v2.6/pro/image-to-video": 100,
+  "fal-ai/kling-video/v3/pro/image-to-video": 110,
 };
 
 function getEstimatedDuration(modelId: string): number {
@@ -81,7 +81,7 @@ export function QueueProvider({ children }: { children: React.ReactNode }) {
           modelId: item.modelId,
           category: item.category,
           prompt: item.prompt,
-          referenceImages: item.referenceImages, // Send as array
+          referenceImages: item.referenceImages,
           settings: item.settings,
         }),
       });
@@ -182,7 +182,7 @@ export function QueueProvider({ children }: { children: React.ReactNode }) {
       modelId: string,
       category: Category,
       prompt: string,
-      referenceImages: string[] | undefined, // Accept array
+      referenceImages: string[] | undefined,
       settings: ModelSettings,
       apiKey: string
     ): string => {
@@ -196,7 +196,7 @@ export function QueueProvider({ children }: { children: React.ReactNode }) {
         modelName: model?.name || "Unknown",
         category,
         prompt,
-        referenceImages, // Store as array
+        referenceImages,
         settings,
         status: "pending",
         progress: 0,

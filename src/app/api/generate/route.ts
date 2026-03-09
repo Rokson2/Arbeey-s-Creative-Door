@@ -206,6 +206,7 @@ function normalizeOutputs(
 
   return outputs;
 }
+
 export async function POST(request: NextRequest) {
   const apiKey = request.headers.get("X-FAL-Key") || process.env.FAL_KEY;
 

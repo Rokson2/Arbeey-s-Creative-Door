@@ -52,7 +52,7 @@ export interface GenerationRequest {
   modelId: string;
   category: Category;
   prompt: string;
-  referenceImages?: string[]; // Changed to array
+  referenceImages?: string[]; // Changed to array for multi-image support
   settings: ModelSettings;
 }
 
@@ -111,7 +111,7 @@ export interface QueueItem {
   modelName: string;
   category: Category;
   prompt: string;
-  referenceImages?: string[]; // Changed to array
+  referenceImages?: string[]; // Changed to array for multi-image support
   settings: ModelSettings;
   status: QueueItemStatus;
   progress: number; // 0-100
