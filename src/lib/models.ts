@@ -7,6 +7,7 @@ export interface ModelConfig {
   costPerUnit: number;
   unit: "image" | "video";
   description?: string;
+  supportsMultipleImages?: boolean;
   params: {
     aspectRatio: boolean;
     resolution: boolean;
@@ -88,13 +89,39 @@ export const MODELS: Record<string, ModelConfig> = {
     },
     imageSizeOptions: ["square_hd", "square", "portrait_4_3", "portrait_16_9", "landscape_4_3", "landscape_16_9", "auto_2K", "auto_4K"],
   },
+  "fal-ai/nano-banana-2/edit": {
+    id: "fal-ai/nano-banana-2/edit",
+    name: "Nano Banana 2 Edit",
+    category: "image-to-image",
+    costPerUnit: 0.039,
+    unit: "image",
+    description: "Fast image editing with multiple reference support (4x faster)",
+    supportsMultipleImages: true,
+    params: {
+      aspectRatio: true,
+      resolution: true,
+      duration: false,
+      numOutputs: true,
+      seed: true,
+      steps: false,
+      guidanceScale: false,
+    },
+    defaults: {
+      aspectRatio: "auto",
+      resolution: "1K",
+      numOutputs: 1,
+    },
+    aspectRatioOptions: DEFAULT_ASPECT_RATIOS,
+    resolutionOptions: DEFAULT_RESOLUTIONS,
+  },
   "fal-ai/nano-banana-pro/edit": {
     id: "fal-ai/nano-banana-pro/edit",
     name: "Nano Banana Pro Edit",
     category: "image-to-image",
     costPerUnit: 0.05,
     unit: "image",
-    description: "Edit existing images with text prompts",
+    description: "Pro image editing with multiple reference support",
+    supportsMultipleImages: true,
     params: {
       aspectRatio: true,
       resolution: true,

@@ -11,7 +11,7 @@ interface QueueContextType {
     modelId: string,
     category: Category,
     prompt: string,
-    referenceImage: string | undefined,
+    referenceImages: string[] | undefined, // Changed to array
     settings: ModelSettings,
     apiKey: string
   ) => string;
@@ -29,6 +29,7 @@ const ESTIMATED_DURATIONS: Record<string, number> = {
   
   // Image-to-Image
   "fal-ai/nano-banana-pro/edit": 20,
+  "fal-ai/nano-banana-2/edit": 20,
   "fal-ai/bytedance/seedream/v4.5/image-to-image": 12,
   "fal-ai/bytedance/seedream/v5-lite/image-to-image": 10,
   
@@ -80,7 +81,7 @@ export function QueueProvider({ children }: { children: React.ReactNode }) {
           modelId: item.modelId,
           category: item.category,
           prompt: item.prompt,
-          referenceImage: item.referenceImage,
+          referenceImages: item.referenceImages, // Send as array
           settings: item.settings,
         }),
       });
@@ -181,7 +182,7 @@ export function QueueProvider({ children }: { children: React.ReactNode }) {
       modelId: string,
       category: Category,
       prompt: string,
-      referenceImage: string | undefined,
+      referenceImages: string[] | undefined, // Accept array
       settings: ModelSettings,
       apiKey: string
     ): string => {
@@ -195,7 +196,7 @@ export function QueueProvider({ children }: { children: React.ReactNode }) {
         modelName: model?.name || "Unknown",
         category,
         prompt,
-        referenceImage,
+        referenceImages, // Store as array
         settings,
         status: "pending",
         progress: 0,

@@ -6,7 +6,7 @@ interface RequestBody {
   modelId: string;
   category: Category;
   prompt: string;
-  referenceImage?: string;
+  referenceImages?: string[]; // Changed to array for multi-image support
   settings: {
     aspectRatio?: string;
     resolution?: string;
@@ -32,7 +32,7 @@ interface NormalizedOutput {
 }
 
 function buildInput(body: RequestBody, model: (typeof MODELS)[string]): Record<string, unknown> {
-  const { prompt, referenceImage, settings, category } = body;
+  const { prompt, referenceImages, settings, category } = body;
   const input: Record<string, unknown> = {};
   const modelId = body.modelId;
 
@@ -116,21 +116,30 @@ function buildInput(body: RequestBody, model: (typeof MODELS)[string]): Record<s
     input.image_size = model.defaults.imageSize;
   }
 
-  if (category === "image-to-image" && referenceImage) {
-    if (modelId.includes("kling-video/v2.6") || modelId.includes("kling-video/v3")) {
-      input.start_image_url = referenceImage;
+  // Handle reference images for image-to-image and image-to-video categories
+  if (category === "image-to-image" && referenceImages && referenceImages.length > 0) {
+    // Check if model supports multiple images (Nano Banana 2 Edit and Nano Banana Pro Edit)
+    if (modelId === "fal-ai/nano-banana-2/edit" || modelId === "fal-ai/nano-banana-pro/edit") {
+      // These models accept image_urls as an array
+      input.image_urls = referenceImages;
+    } else if (modelId.includes("kling-video/v2.6") || modelId.includes("kling-video/v3")) {
+      // Kling models use start_image_url (single image)
+      input.start_image_url = referenceImages[0];
     } else if (modelId.includes("veo") || modelId.includes("kling-video/v2.5")) {
-      input.image_url = referenceImage;
+      // Veo and Kling v2.5 use image_url (single image)
+      input.image_url = referenceImages[0];
     } else {
-      input.image_urls = [referenceImage];
+      // Default: use first image as image_urls array for backwards compatibility
+      input.image_urls = [referenceImages[0]];
     }
   }
 
-  if (category === "image-to-video" && referenceImage) {
+  if (category === "image-to-video" && referenceImages && referenceImages.length > 0) {
+    // Image-to-video models only support single image
     if (modelId.includes("kling-video/v2.6") || modelId.includes("kling-video/v3")) {
-      input.start_image_url = referenceImage;
+      input.start_image_url = referenceImages[0];
     } else {
-      input.image_url = referenceImage;
+      input.image_url = referenceImages[0];
     }
   }
 
@@ -197,7 +206,6 @@ function normalizeOutputs(
 
   return outputs;
 }
-
 export async function POST(request: NextRequest) {
   const apiKey = request.headers.get("X-FAL-Key") || process.env.FAL_KEY;
 
@@ -244,9 +252,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if ((body.category === "image-to-image" || body.category === "image-to-video") && !body.referenceImage) {
+    if ((body.category === "image-to-image" || body.category === "image-to-video") && 
+        (!body.referenceImages || body.referenceImages.length === 0)) {
       return NextResponse.json(
-        { error: "referenceImage is required for image-to-image and image-to-video categories" },
+        { error: "At least one reference image is required for image-to-image and image-to-video categories" },
         { status: 400 }
       );
     }
