@@ -36,8 +36,10 @@ A web application for generating AI images and videos using fal.ai's powerful mo
 
 **macOS:**
 1. Download this repository
-2. Double-click `start-mac.sh`
+2. Double-click `start-mac.command`
 3. The app will open in your browser automatically
+
+*Note: If macOS says you don't have permission, see the [Troubleshooting](#troubleshooting) section below.*
 
 **Windows:**
 1. Download this repository
@@ -78,7 +80,7 @@ Or enter it directly in the app's Settings panel.
 ## Creating a Desktop Shortcut
 
 **macOS:**
-1. Right-click `start-mac.sh` → Make Alias
+1. Right-click `start-mac.command` → Make Alias
 2. Rename the alias to "Arbeey's Creative Door"
 3. Drag the alias to your Desktop
 
@@ -100,7 +102,7 @@ Arbeey-s-Creative-Door/
 │   └── lib/
 │       ├── models.ts               # Model configurations
 │       └── types.ts                # TypeScript types
-├── start-mac.sh                    # Mac launcher
+├── start-mac.command               # Mac launcher
 ├── start-windows.bat               # Windows launcher
 └── package.json
 ```
@@ -122,6 +124,18 @@ Arbeey-s-Creative-Door/
 - Session spending is tracked with warnings at 80%
 - Generation is blocked when spending limit is reached
 - Reset session to continue
+
+## Troubleshooting
+
+### macOS Permission Denied
+If you see a message saying "The file couldn't be executed because you don't have the necessary permissions":
+
+1. Open your Terminal.
+2. Type `chmod +x ` (with a space at the end).
+3. Drag the `start-mac.command` file into the terminal window.
+4. Press **Enter**.
+
+This happens because some browsers strip execution permissions when downloading files as a ZIP.
 
 ## License
 
